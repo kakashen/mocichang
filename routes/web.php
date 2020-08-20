@@ -40,7 +40,7 @@ $router->group(['prefix' => 'banner'], function() use ($router) {
 });
 
 $router->group(['prefix' => 'cart'], function() use ($router) {
-    $router->post('list', 'ProductController@list'); // 购物车列表
+    $router->post('list', 'CartController@list'); // 购物车列表
     $router->post('add', 'CartController@add');
     // $router->post('update', 'CategoryController@update');
     $router->post('delete', 'CartController@delete');
