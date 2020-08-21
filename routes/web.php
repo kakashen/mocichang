@@ -18,28 +18,28 @@ $router->get('/', function () use ($router) {
 });
 
 
-$router->group(['prefix' => 'category'], function() use ($router) {
+$router->group(['prefix' => 'category'], function () use ($router) {
     $router->post('list', 'CategoryController@list');
     $router->post('add', 'CategoryController@add');
     $router->post('update', 'CategoryController@update');
 
 });
 
-$router->group(['prefix' => 'product'], function() use ($router) {
+$router->group(['prefix' => 'product'], function () use ($router) {
     $router->post('list', 'ProductController@list');
     $router->post('add', 'ProductController@add');
     $router->post('update_stock', 'ProductController@update_stock');
 
 });
 
-$router->group(['prefix' => 'banner'], function() use ($router) {
+$router->group(['prefix' => 'banner'], function () use ($router) {
     $router->post('list', 'BannerController@list');
     $router->post('add', 'BannerController@add');
-    // $router->post('update', 'CategoryController@update');
+    $router->post('update', 'BannerController@update');
 
 });
 
-$router->group(['prefix' => 'cart'], function() use ($router) {
+$router->group(['prefix' => 'cart'], function () use ($router) {
     $router->post('list', 'CartController@list'); // 购物车列表
     $router->post('add', 'CartController@add');
     // $router->post('update', 'CategoryController@update');
@@ -48,7 +48,7 @@ $router->group(['prefix' => 'cart'], function() use ($router) {
 
 });
 
-$router->group(['prefix' => 'order'], function() use ($router) {
+$router->group(['prefix' => 'order'], function () use ($router) {
     $router->post('list', 'OrderController@list');
     $router->post('add', 'OrderController@add');
     // $router->post('update', 'OrderController@update');
