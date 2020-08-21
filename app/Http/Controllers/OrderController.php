@@ -37,7 +37,7 @@ class OrderController extends Controller
     {
         // 商品信息 [{"product_id":"2659021","num":1},{"product_id":"100007218425","num":1}]
         $product_infos = $request->input('product_infos');
-        $address_id = $request->get('address_id');
+        $address = $request->get('address');
 
         $product_infos = json_decode($product_infos);
         $user_id = Auth::user() ?? 1; // 用户id
@@ -48,7 +48,7 @@ class OrderController extends Controller
             try {
                 $ret = $this->order->create([
                     'user_id' => $user_id,
-                    'address_id' => $address_id,
+                    'address' => $address,
                     'pay_at' => $created_at,
                     'no' => $no,
                     'created_at' => $created_at
