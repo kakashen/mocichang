@@ -33,7 +33,7 @@ $router->group(['prefix' => 'product'], function() use ($router) {
 });
 
 $router->group(['prefix' => 'banner'], function() use ($router) {
-    $router->post('list', 'ProductController@list');
+    $router->post('list', 'BannerController@list');
     $router->post('add', 'BannerController@add');
     // $router->post('update', 'CategoryController@update');
 
