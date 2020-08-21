@@ -48,3 +48,12 @@ $router->group(['prefix' => 'cart'], function() use ($router) {
 
 });
 
+$router->group(['prefix' => 'order'], function() use ($router) {
+    $router->post('list', 'OrderController@list');
+    $router->post('add', 'OrderController@add');
+    // $router->post('update', 'OrderController@update');
+    $router->post('delete', 'OrderController@delete');
+
+
+});
+
