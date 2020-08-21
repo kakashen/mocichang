@@ -17,43 +17,54 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-
-$router->group(['prefix' => 'category'], function () use ($router) {
-    $router->post('list', 'CategoryController@list');
-    $router->post('add', 'CategoryController@add');
-    $router->post('update', 'CategoryController@update');
-
-});
-
-$router->group(['prefix' => 'product'], function () use ($router) {
-    $router->post('list', 'ProductController@list');
-    $router->post('add', 'ProductController@add');
-    $router->post('update_stock', 'ProductController@update_stock');
-
-});
-
-$router->group(['prefix' => 'banner'], function () use ($router) {
-    $router->post('list', 'BannerController@list');
-    $router->post('add', 'BannerController@add');
-    $router->post('update', 'BannerController@update');
-
-});
-
-$router->group(['prefix' => 'cart'], function () use ($router) {
-    $router->post('list', 'CartController@list'); // 购物车列表
-    $router->post('add', 'CartController@add');
-    // $router->post('update', 'CategoryController@update');
-    $router->post('delete', 'CartController@delete');
+$router->group(['middleware' => 'auth'], function () use ($router) {
 
 
-});
+    $router->group(['prefix' => 'category'], function () use ($router) {
+        $router->post('list', 'CategoryController@list');
+        $router->post('add', 'CategoryController@add');
+        $router->post('update', 'CategoryController@update');
 
-$router->group(['prefix' => 'order'], function () use ($router) {
-    $router->post('list', 'OrderController@list');
-    $router->post('add', 'OrderController@add');
-    // $router->post('update', 'OrderController@update');
-    $router->post('delete', 'OrderController@delete');
+    });
 
+    $router->group(['prefix' => 'product'], function () use ($router) {
+        $router->post('list', 'ProductController@list');
+        $router->post('add', 'ProductController@add');
+        $router->post('update_stock', 'ProductController@update_stock');
+
+    });
+
+    $router->group(['prefix' => 'banner'], function () use ($router) {
+        $router->post('list', 'BannerController@list');
+        $router->post('add', 'BannerController@add');
+        $router->post('update', 'BannerController@update');
+
+    });
+
+    $router->group(['prefix' => 'cart'], function () use ($router) {
+        $router->post('list', 'CartController@list'); // 购物车列表
+        $router->post('add', 'CartController@add');
+        // $router->post('update', 'CategoryController@update');
+        $router->post('delete', 'CartController@delete');
+
+
+    });
+
+    $router->group(['prefix' => 'order'], function () use ($router) {
+        $router->post('list', 'OrderController@list');
+        $router->post('add', 'OrderController@add');
+        // $router->post('update', 'OrderController@update');
+        $router->post('delete', 'OrderController@delete');
+
+    });
+
+    $router->group(['prefix' => 'address'], function () use ($router) {
+        $router->post('list', 'AddressController@list');
+        $router->post('add', 'AddressController@add');
+        // $router->post('update', 'AddressController@update');
+        $router->post('delete', 'AddressController@delete');
+
+    });
 
 });
 
