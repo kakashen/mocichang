@@ -16,6 +16,9 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+// $router->get('/wechat', 'WeChatController@serve');
+$router->addRoute(['GET', 'POST'], '/wechat', 'WeChatController@serve');
+
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
 
