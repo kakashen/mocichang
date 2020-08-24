@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use EasyWeChat\Factory;
 use Log;
 
 class WeChatController extends Controller
