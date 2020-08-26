@@ -75,10 +75,9 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'admin'], function () use ($router) {
         $router->group(['prefix' => 'order'], function () use ($router) {
             $router->post('show', 'OrderController@show');
-            $router->post('add', 'OrderController@add');
-            // $router->post('update', 'AddressController@update');
-            $router->post('delete', 'OrderController@delete');
-
+        });
+        $router->group(['prefix' => 'user'], function () use ($router) {
+            $router->post('show', 'UserController@show');
         });
 
     });
