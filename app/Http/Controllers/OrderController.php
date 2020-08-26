@@ -90,6 +90,27 @@ class OrderController extends Controller
         }
     }
 
+    public function show(Request $request)
+    {
+        $page = intval($request->get('page')); // 第几页
+        $per_page = intval($request->get('per_page')); // 每页多少
+        $pay_status = $request->get('pay_status'); //
+
+        try {
+            $query = $this->order->where('pay_status', $pay_status);
+            $data = $query->skip(($page - 1) * $per_page)
+                ->take($per_page)
+                ->with('product')
+                ->get();
+            $total = $query->count();
+            return response()->json(['data' => $data, 'total' => $total, 'code' => 200, 'message' => '获取成功']);
+
+        } catch (\Exception $e) {
+            return response()->json(['code' => 500, 'message' => '获取失败']);
+
+        }
+    }
+
 
     //
 }
