@@ -31,12 +31,21 @@ class CartController extends Controller
     public function add(Request $request)
     {
         $product_id = $request->input('product_id'); // 商品id
-        $amount = $request->get('amount'); // 分类描述
-
-
+        $amount = $request->get('amount', 1); // 分类描述
         $user_id = Auth::user() ?? 1; // 用户id
         $created_at = time();
         try {
+
+            $query = $this->cart->where('product_id', $product_id)->where('user_id', $user_id);
+            if ($query->first()) {
+                try {
+                    $query->increment('amount');
+                    return response()->json(['code' => 200, 'message' => '加入成功']);
+                } catch (\Exception $e) {
+                    return response()->json(['code' => 500, 'message' => '加入失败']);
+                }
+            }
+
             $this->cart->insert([
                 'product_id' => $product_id,
                 'amount' => $amount,
