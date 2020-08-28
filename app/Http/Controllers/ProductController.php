@@ -23,7 +23,7 @@ class ProductController extends Controller
     public function list(Request $request)
     {
         // $category_id = $request->get('category_id'); // 分类id
-        $data = $this->product->get();
+        $data = $this->product->where('active', 1)->get();
         return response()->json(['data' => $data, 'code' => 200, 'message' => 'ok']);
     }
 
