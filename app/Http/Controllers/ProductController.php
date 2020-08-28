@@ -22,8 +22,8 @@ class ProductController extends Controller
 
     public function list(Request $request)
     {
-        $category_id = $request->get('category_id'); // 分类id
-        $data = $this->product->where('category_id', $category_id)->get();
+        // $category_id = $request->get('category_id'); // 分类id
+        $data = $this->product->get();
         return response()->json(['data' => $data, 'code' => 200, 'message' => 'ok']);
     }
 
