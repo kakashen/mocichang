@@ -61,10 +61,16 @@ class CartController extends Controller
 
     public function delete(Request $request)
     {
-        $cart_id = $request->get('cart_id');
+        $product_id = $request->get('product_id');
+
         try {
-            $this->cart->where('id', $cart_id)
-                ->where('user_id', Auth::user()->id ?? 1)->delete();
+            $query = $this->cart->where('product_id', $product_id)
+                ->where('user_id', Auth::user()->id ?? 1);
+
+            $query->decrement('amount');
+            if ($query->first()->amount == 0) {
+                $query->delete();
+            }
             return response()->json(['code' => 200, 'message' => '删除成功']);
 
         } catch (\Exception $e) {
