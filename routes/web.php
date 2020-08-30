@@ -62,6 +62,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
             $router->post('show', 'UserController@show');
         });
         $router->group(['prefix' => 'category'], function () use ($router) {
+            $router->post('list', 'CategoryController@list');
             $router->post('add', 'CategoryController@add');
             $router->post('update', 'CategoryController@update');
 
