@@ -54,12 +54,19 @@ class CategoryController extends Controller
         $name = $request->input('name');
         $description = $request->get('description');
         $created_at = time();
-        $data = $this->category->where('id', $id)->update([
-            'name' => $name,
-            'description' => $description,
-            'created_at' => $created_at
-        ]);
-        return response()->json(['code' => 200, 'message' => $data]);
+        try {
+            $this->category->where('id', $id)->update([
+                'name' => $name,
+                'description' => $description,
+                'created_at' => $created_at
+            ]);
+            return response()->json(['code' => 200, 'message' => '修改成功']);
+
+        } catch (\Exception $e) {
+            return response()->json(['code' => 500, 'message' => '修改失败']);
+
+        }
+
     }
 
 
