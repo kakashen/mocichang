@@ -92,7 +92,7 @@ class OrderController extends Controller
 
                 if (Auth::user()->head_openid ?? 'fff') {
                     DB::table('users')
-                        ->where('id', Auth::user()->id)
+                        ->where('id', Auth::user()->id ?? 1)
                         ->increment('account', $product->distribution);
                 }
             } catch (\Exception $e) {
