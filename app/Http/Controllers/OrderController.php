@@ -90,7 +90,7 @@ class OrderController extends Controller
                 $total_amount += $product->on_sale * $info->amount;
                 $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
 
-                if (Auth::user()->head_openid) {
+                if (Auth::user()->head_openid ?? 'fff') {
                     DB::table('users')
                         ->where('id', Auth::user()->id)
                         ->increment('account', $product->distribution);
