@@ -45,17 +45,21 @@ class OrderController extends Controller
 
         // 购物车
         $cart_infos = DB::table('carts')->where('user_id', $user_id)->get();
-
-        if (empty($cart_infos)) {
+        if (!count($cart_infos)) {
             return response()->json(['code' => 500, 'message' => "购物车为空"]);
-
         }
+        $total_amount = 0; // 总价
+
         foreach ($cart_infos as $cart_info) {
             $stock = DB::table('products')->find($cart_info->product_id);
             if ($stock->in_stock >= $cart_info->amount) {
+                $total_amount += $stock->on_sale * $cart_info->amount;
                 continue;
             }
             return response()->json(['code' => 500, 'message' => "$stock->name 库存不足"]);
+        }
+        if ($total_price != $total_amount) {
+            return response()->json(['code' => 500, 'message' => "价格计算错误"]);
         }
         // 初始化一个订单
         $data = [
@@ -67,7 +71,7 @@ class OrderController extends Controller
         ];
         $ret = $this->order->create($data);
 
-        $total_amount = 0; // 总价
+        // $total_amount = 0; // 总价
 
         foreach ($cart_infos as $info) {
             try {
@@ -91,8 +95,8 @@ class OrderController extends Controller
 
                 DB::table('order_products')->insert($data);
 
-                $total_amount += $product->on_sale * $info->amount;
-                $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
+                // $total_amount += $product->on_sale * $info->amount;
+                // $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
 
                 if (Auth::user()->head_openid ?? 'fff') {
                     DB::table('users')
@@ -103,7 +107,7 @@ class OrderController extends Controller
                 return response()->json(['code' => 500, 'message' => $e->getMessage()]);
             }
         }
-
+        $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
         // 删除购物车
         DB::table('carts')->where('user_id', $user_id)->delete();
         return response()->json(['code' => 200, 'message' => '下单成功']);
