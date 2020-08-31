@@ -35,29 +35,44 @@ class OrderController extends Controller
 
     public function add(Request $request)
     {
-        // 商品信息 [{"product_id":"2659021","num":1},{"product_id":"100007218425","num":1}]
-        $product_infos = $request->input('product_infos');
+        $total_price = $request->input('total_price');
         $address = $request->get('address');
 
-        $product_infos = json_decode($product_infos);
+
         $user_id = Auth::user() ?? 1; // 用户id
         $created_at = time();
         $no = uniqid();
 
-        foreach ($product_infos as $info) {
+        // 购物车
+        $cart_infos = DB::table('carts')->where('user_id', $user_id)->get();
+
+        foreach ($cart_infos as $cart_info) {
+            $stock = DB::table('products')->find($cart_info->product_id);
+            if ($stock->in_stock >= $cart_info->amount) {
+                continue;
+            }
+            return response()->json(['code' => 500, 'message' => "$stock->name 库存不足"]);
+        }
+        // 初始化一个订单
+        $data = [
+            'pay_at' => $created_at,
+            'no' => $no,
+            'user_id' => $user_id,
+            'address' => $address,
+            'created_at' => $created_at,
+        ];
+        $ret = $this->order->create($data);
+
+        $total_amount = 0; // 总价
+
+        foreach ($cart_infos as $info) {
             try {
-                $ret = $this->order->create([
-                    'user_id' => $user_id,
-                    'address' => $address,
-                    'pay_at' => $created_at,
-                    'no' => $no,
-                    'created_at' => $created_at
-                ]);
                 $product = DB::table('products')->find($info->product_id);
                 $data = [
                     'order_id' => $ret->id,
                     'product_id' => $info->product_id,
                     'name' => $product->name,
+                    'amount' => $info->amount,
                     'cover_image' => $product->cover_image,
                     'description' => $product->description,
                     'category_id' => $product->category_id,
@@ -67,14 +82,22 @@ class OrderController extends Controller
                     // 'created_at' => $created_at
                 ];
 
+                DB::table('products')->where('id', $info->product_id)
+                    ->decrement('in_stock', $info->amount);
+
                 DB::table('order_products')->insert($data);
 
+                $total_amount += $product->on_sale * $info->amount;
+                $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
+
+                // TODO
+                // 商品分销
             } catch (\Exception $e) {
                 return response()->json(['code' => 500, 'message' => $e->getMessage()]);
             }
         }
 
-        return response()->json(['code' => 200, 'message' => '加入成功']);
+        return response()->json(['code' => 200, 'message' => '下单成功']);
     }
 
     public function delete(Request $request)
