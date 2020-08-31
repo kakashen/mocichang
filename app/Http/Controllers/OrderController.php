@@ -100,6 +100,8 @@ class OrderController extends Controller
             }
         }
 
+        // 删除购物车
+        DB::table('carts')->where('user_id', $user_id)->delete();
         return response()->json(['code' => 200, 'message' => '下单成功']);
     }
 
