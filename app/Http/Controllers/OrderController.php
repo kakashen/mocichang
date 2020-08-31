@@ -46,6 +46,10 @@ class OrderController extends Controller
         // 购物车
         $cart_infos = DB::table('carts')->where('user_id', $user_id)->get();
 
+        if (empty($cart_infos)) {
+            return response()->json(['code' => 500, 'message' => "购物车为空"]);
+
+        }
         foreach ($cart_infos as $cart_info) {
             $stock = DB::table('products')->find($cart_info->product_id);
             if ($stock->in_stock >= $cart_info->amount) {
