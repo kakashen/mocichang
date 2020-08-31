@@ -90,8 +90,11 @@ class OrderController extends Controller
                 $total_amount += $product->on_sale * $info->amount;
                 $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
 
-                // TODO
-                // 商品分销
+                if (Auth::user()->head_openid) {
+                    DB::table('users')
+                        ->where('id', Auth::user()->id)
+                        ->increment('account', $product->distribution);
+                }
             } catch (\Exception $e) {
                 return response()->json(['code' => 500, 'message' => $e->getMessage()]);
             }
