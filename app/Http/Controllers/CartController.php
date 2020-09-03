@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Cart;
-use App\Model\Category;
-use App\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

@@ -81,6 +81,11 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
 
         });
 
+        $router->group(['prefix' => 'image'], function () use ($router) {
+            $router->post('upload', 'ImageController@upload');
+
+        });
+
     });
 
 });
