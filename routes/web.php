@@ -80,6 +80,8 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
             $router->post('update_stock', 'ProductController@update_stock');
             $router->post('update', 'ProductController@update');
             $router->post('modify_price', 'ProductController@modifyPrice');
+            $router->post('active', 'ProductController@active');
+
 
 
 

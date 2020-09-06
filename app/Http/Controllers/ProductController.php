@@ -118,5 +118,19 @@ class ProductController extends Controller
         }
     }
 
+    public function active(Request $request)
+    {
+        $product_id = $request->get('product_id');
+        $active = $request->get('active');
+
+        try {
+            $this->product->where('id', $product_id)->update(['active' => $active]);
+            return response()->json(['code' => 200, 'message' => '更新成功']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['code' => 500, 'message' => '更新失败']);
+        }
+    }
+
 
 }
