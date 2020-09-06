@@ -134,11 +134,12 @@ class OrderController extends Controller
 
         try {
             $query = $this->order->where('pay_status', $pay_status);
+            $total = $query->count();
+
             $data = $query->skip(($page - 1) * $per_page)
                 ->take($per_page)
                 ->with('product')
                 ->get();
-            $total = $query->count();
             return response()->json(['data' => $data, 'total' => $total, 'code' => 200, 'message' => '获取成功']);
 
         } catch (\Exception $e) {
