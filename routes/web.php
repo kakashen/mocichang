@@ -79,6 +79,8 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
             $router->post('add', 'ProductController@add');
             $router->post('update_stock', 'ProductController@update_stock');
             $router->post('update', 'ProductController@update');
+            $router->post('modify_price', 'ProductController@modifyPrice');
+
 
 
         });

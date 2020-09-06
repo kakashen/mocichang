@@ -95,5 +95,28 @@ class ProductController extends Controller
         }
     }
 
+    public function modifyPrice(Request $request)
+    {
+        $product_id = $request->get('product_id');
+        $on_sale = $request->get('on_sale');
+        $original_sale = $request->get('original_sale');
+        $distribution = $request->get('distribution');
+
+        try {
+            $this->product->where('id', $product_id)
+                ->update([
+                    'on_sale' => $on_sale,
+                    'original_sale' => $original_sale,
+                    'distribution' => $distribution
+                ]);
+            return response()->json(['code' => 200, 'message' => '更新成功']);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['code' => 500, 'message' => '更新失败']);
+
+        }
+    }
+
 
 }
