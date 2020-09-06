@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Category;
 use App\Model\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -15,6 +16,7 @@ class ProductController extends Controller
      */
 
     private $product;
+
     public function __construct(Product $product)
     {
         $this->product = $product;
@@ -65,6 +67,31 @@ class ProductController extends Controller
             return response()->json(['code' => 200, 'message' => '更新成功']);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => '更新失败']);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        $name = $request->get('name');
+        $cover_image = $request->get('cover_image');
+        $description = $request->get('description');
+        $category_id = $request->get('category_id');
+        $product_id = $request->get('product_id');
+
+        try {
+            $this->product->where('id', $product_id)
+                ->update([
+                    'name' => $name,
+                    'cover_image' => $cover_image,
+                    'description' => $description,
+                    'category_id' => $category_id
+                ]);
+            return response()->json(['code' => 200, 'message' => '更新成功']);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['code' => 500, 'message' => '更新失败']);
+
         }
     }
 
