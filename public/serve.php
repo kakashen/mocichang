@@ -3,8 +3,8 @@ use EasyWeChat\Factory;
 
 $config = [
     'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),
-    'secret' => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),
-    'token' => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),
+    'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET'),
+    'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN'),
     'response_type' => 'array',
     //...
 ];
