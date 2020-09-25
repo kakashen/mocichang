@@ -1,10 +1,11 @@
 <?php
+
 use EasyWeChat\Factory;
 
 $config = [
-    'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),
-    'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET'),
-    'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN'),
+    'app_id' => '',
+    'secret' => '',
+    'token' => 'mocichang',
     'response_type' => 'array',
     //...
 ];
