@@ -25,4 +25,63 @@ class WeChatController extends Controller
 
         return $app->server->serve();
     }
+
+    /**
+     * @return mixed
+     * 读取（查询）已设置菜单
+     */
+    public function list()
+    {
+        $app = app('wechat.official_account');
+        return $app->menu->list();
+    }
+
+
+    /**
+     * @return mixed
+     * 获取当前菜单
+     */
+    public function current()
+    {
+        $app = app('wechat.official_account');
+        return $app->menu->current();
+    }
+
+    /**
+     * 添加普通菜单
+     */
+    public function create()
+    {
+        $buttons = [
+            [
+                "type" => "click",
+                "name" => "今日歌曲",
+                "key"  => "V1001_TODAY_MUSIC"
+            ],
+            [
+                "name"       => "菜单",
+                "sub_button" => [
+                    [
+                        "type" => "view",
+                        "name" => "搜索",
+                        "url"  => "http://www.soso.com/"
+                    ],
+                    [
+                        "type" => "view",
+                        "name" => "视频",
+                        "url"  => "http://v.qq.com/"
+                    ],
+                    [
+                        "type" => "click",
+                        "name" => "赞一下我们",
+                        "key" => "V1001_GOOD"
+                    ],
+                ],
+            ],
+        ];
+        $app = app('wechat.official_account');
+        $app->menu->create($buttons);
+    }
+
+
 }

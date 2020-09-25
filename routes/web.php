@@ -21,7 +21,9 @@ $router->get('/', function () use ($router) {
 });
 // $router->get('/wechat', 'WeChatController@serve');
 $router->addRoute(['GET', 'POST'], '/wechat', 'WeChatController@serve');
-
+$router->group(['prefix' => 'wechat'], function () use ($router) {
+    $router->post('create', 'WeChatController@create');
+});
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'category'], function () use ($router) {
