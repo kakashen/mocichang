@@ -76,7 +76,7 @@ class ProductController extends Controller
         $cover_image = $request->get('cover_image');
         $description = $request->get('description');
         $category_id = $request->get('category_id');
-        $product_id = $request->get('product_id');
+        $product_id = $request->get('id');
 
         try {
             $this->product->where('id', $product_id)
