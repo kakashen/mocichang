@@ -63,8 +63,8 @@ class WeChatController extends Controller
                 "sub_button" => [
                     [
                         "type" => "view",
-                        "name" => "搜索",
-                        "url"  => "http://www.soso.com/"
+                        "name" => "莫磁场",
+                        "url"  => "http://www.dist.suibian.ink/"
                     ],
                     [
                         "type" => "view",
