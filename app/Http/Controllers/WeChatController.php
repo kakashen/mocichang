@@ -3,7 +3,8 @@
 
 namespace App\Http\Controllers;
 
-use EasyWeChat\Factory;
+use Illuminate\Http\Request;
+
 use Log;
 
 class WeChatController extends Controller
@@ -81,6 +82,23 @@ class WeChatController extends Controller
         ];
         $app = app('wechat.official_account');
         $app->menu->create($buttons);
+    }
+
+    public function callback(Request $request)
+    {
+        Log::info($request);
+        $app = app('wechat.official_account');
+        $oauth = $app->oauth;
+
+        // 获取 OAuth 授权结果用户信息
+        $code = "微信回调URL携带的 code";
+        $user = $oauth->userFromCode();
+
+        $_SESSION['wechat_user'] = $user->toArray();
+
+        $targetUrl = empty($_SESSION['target_url']) ? '/' : $_SESSION['target_url'];
+
+        header('Location:'. $targetUrl); // 跳转到 user/profile
     }
 
 
