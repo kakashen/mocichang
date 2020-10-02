@@ -10,6 +10,6 @@ class Product extends Model {
 
     public function getCoverImageAttribute($value)
     {
-        return env('APP_URL', 'http://api.suibian.ink') . $value;
+        return env('APP_URL', 'http://api.suibian.ink/') . $value;
     }
 }
