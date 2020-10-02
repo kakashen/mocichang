@@ -64,7 +64,7 @@ class WeChatController extends Controller
                 "sub_button" => [
                     [
                         "type" => "view",
-                        "name" => "莫磁场",
+                        "name" => "膜磁场",
                         "url"  => "http://www.api.suibian.ink/callback"
                     ],
                     [
@@ -74,7 +74,7 @@ class WeChatController extends Controller
                     ],
                     [
                         "type" => "click",
-                        "name" => "赞一下我们",
+                        "name" => "赞一下",
                         "key" => "V1001_GOOD"
                     ],
                 ],
