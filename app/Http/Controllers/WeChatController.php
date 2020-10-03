@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 
 use Log;
@@ -98,7 +99,36 @@ class WeChatController extends Controller
 
         $targetUrl = empty($_SESSION['target_url']) ? '/' : $_SESSION['target_url'];
 
-        header('Location:'. $targetUrl); // 跳转到 user/profile
+        header('Location:'. 'http://www.dist.suibian.ink');
+
+    }
+
+    public function oauth()
+    {
+        $config = [
+            // ...
+            'oauth' => [
+                'scopes'   => ['snsapi_userinfo'],
+                'callback' => '/oauth_callback',
+            ],
+            // ..
+        ];
+
+        $app = Factory::officialAccount($config);
+        $oauth = $app->oauth;
+        // 未登录
+        if (empty($_SESSION['wechat_user'])) {
+
+            $_SESSION['target_url'] = 'http://www.dist.suibian.ink';
+
+            return $oauth->redirect();
+            // 这里不一定是return，如果你的框架action不是返回内容的话你就得使用
+            // $oauth->redirect()->send();
+        }
+        // 已经登录过
+        $user = $_SESSION['wechat_user'];
+        header('Location:'. $_SESSION['target_url']);
+
     }
 
 
