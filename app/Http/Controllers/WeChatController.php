@@ -108,8 +108,8 @@ class WeChatController extends Controller
         $config = [
             // ...
             'oauth' => [
-                'scopes'   => ['snsapi_userinfo'],
-                'callback' => '/oauth_callback',
+                'scopes'   => ['snsapi_base'],
+                'callback' => 'http://www.api.suibian.ink/wechat/callback',
             ],
             // ..
         ];
