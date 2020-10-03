@@ -92,12 +92,12 @@ class WeChatController extends Controller
         $oauth = $app->oauth;
 
         // 获取 OAuth 授权结果用户信息
-        $code = "微信回调URL携带的 code";
-        $user = $oauth->userFromCode();
-
+        // $code = "微信回调URL携带的 code";
+        $user = $oauth->userFromCode($request['code']);
+        Log:info('----'. $user . '----');
         $_SESSION['wechat_user'] = $user->toArray();
 
-        $targetUrl = empty($_SESSION['target_url']) ? '/' : $_SESSION['target_url'];
+        // $targetUrl = empty($_SESSION['target_url']) ? '/' : $_SESSION['target_url'];
 
         header('Location:'. 'http://www.dist.suibian.ink');
 
@@ -112,7 +112,7 @@ class WeChatController extends Controller
             'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN', 'your-token'),           // Token
             'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY', ''),
             'oauth' => [
-                'scopes'   => ['snsapi_base'],
+                'scopes'   => ['snsapi_userinfo'], // snsapi_userinfo snsapi_base
                 'callback' => 'http://www.api.suibian.ink/callback',
             ],
             // ..
