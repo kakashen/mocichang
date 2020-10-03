@@ -66,7 +66,7 @@ class WeChatController extends Controller
                     [
                         "type" => "view",
                         "name" => "膜磁场",
-                        "url"  => "http://www.api.suibian.ink/wechat/callback"
+                        "url"  => "http://www.api.suibian.ink/wechat/oauth"
                     ],
                     [
                         "type" => "view",
