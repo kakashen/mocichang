@@ -56,29 +56,9 @@ class WeChatController extends Controller
     {
         $buttons = [
             [
-                "type" => "click",
-                "name" => "今日歌曲",
-                "key"  => "V1001_TODAY_MUSIC"
-            ],
-            [
-                "name"       => "菜单",
-                "sub_button" => [
-                    [
-                        "type" => "view",
-                        "name" => "膜磁场",
-                        "url"  => "http://www.api.suibian.ink/wechat/oauth"
-                    ],
-                    [
-                        "type" => "view",
-                        "name" => "视频",
-                        "url"  => "http://v.qq.com/"
-                    ],
-                    [
-                        "type" => "click",
-                        "name" => "赞一下",
-                        "key" => "V1001_GOOD"
-                    ],
-                ],
+                "type" => "view",
+                "name" => "膜磁场",
+                "url"  => "http://www.dist.suibian.ink"
             ],
         ];
         $app = app('wechat.official_account');
