@@ -39,7 +39,7 @@ class OrderController extends Controller
         $address = $request->get('address');
 
 
-        $user_id = Auth::user() ?? 1; // 用户id
+        $user_id = Auth::user(); // 用户id
         $created_at = time();
         $no = uniqid();
 
@@ -98,9 +98,9 @@ class OrderController extends Controller
                 // $total_amount += $product->on_sale * $info->amount;
                 // $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
 
-                if (Auth::user()->head_openid ?? 'fff') {
+                if (Auth::user()->head_openid) {
                     DB::table('users')
-                        ->where('id', Auth::user()->id ?? 1)
+                        ->where('id', Auth::user()->id)
                         ->increment('account', $product->distribution);
                 }
             } catch (\Exception $e) {
@@ -118,7 +118,7 @@ class OrderController extends Controller
         $cart_id = $request->get('cart_id');
         try {
             $this->order->where('id', $cart_id)
-                ->where('user_id', Auth::user()->id ?? 1)->delete();
+                ->where('user_id', Auth::user()->id)->delete();
             return response()->json(['code' => 200, 'message' => '删除成功']);
 
         } catch (\Exception $e) {

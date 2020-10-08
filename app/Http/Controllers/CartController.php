@@ -31,7 +31,7 @@ class CartController extends Controller
     {
         $product_id = $request->input('product_id'); // 商品id
         $amount = $request->get('amount', 1); // 分类描述
-        $user_id = Auth::user() ?? 1; // 用户id
+        $user_id = Auth::user(); // 用户id
         $created_at = time();
         try {
 
@@ -64,7 +64,7 @@ class CartController extends Controller
 
         try {
             $query = $this->cart->where('product_id', $product_id)
-                ->where('user_id', Auth::user()->id ?? 1);
+                ->where('user_id', Auth::user()->id);
 
             $query->decrement('amount');
             if ($query->first()->amount == 0) {

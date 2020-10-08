@@ -27,7 +27,7 @@ class AddressController extends Controller
     {
 
         $data = DB::table('user_addresses')
-            ->where('user_id', Auth::user()->id ?? 1)->get();
+            ->where('user_id', Auth::user()->id)->get();
         return response()->json(['data' => $data, 'code' => 200, 'message' => 'ok']);
     }
 
@@ -38,7 +38,7 @@ class AddressController extends Controller
         $contact_phone = $request->get('contact_phone');
 
 
-        $user_id = Auth::user() ?? 1;
+        $user_id = Auth::user();
 
         $created_at = time();
         try {
@@ -62,7 +62,7 @@ class AddressController extends Controller
         try {
             DB::table('user_addresses')
                 ->where('id', $id)
-                ->where('user_id', Auth::user()->id ?? 1)
+                ->where('user_id', Auth::user()->id)
                 ->delete();
             return response()->json(['code' => 200, 'message' => '删除成功']);
 
