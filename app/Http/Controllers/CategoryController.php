@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Model\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class CategoryController extends Controller
 {
@@ -21,6 +23,8 @@ class CategoryController extends Controller
 
     public function list()
     {
+                Log:info(Auth::user() . '123123');
+
         $data = $this->category->orderBy('rank')->get();
         return response()->json(['data' => $data, 'code' => 200, 'message' => 'ok']);
     }
