@@ -23,7 +23,7 @@ class CartController extends Controller
 
     public function list()
     {
-        $data = $this->cart->with('product')->get();
+        $data = $this->cart->where('user_id', Auth::user()->id)->with('product')->get();
         return response()->json(['data' => $data, 'code' => 200, 'message' => 'ok']);
     }
 
