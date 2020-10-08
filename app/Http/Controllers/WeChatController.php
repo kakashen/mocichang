@@ -75,37 +75,42 @@ class WeChatController extends Controller
         // 获取 OAuth 授权结果用户信息
         // $code = "微信回调URL携带的 code";
         // $user = $oauth->userFromCode($request['code']);
-        Log:
-        info('----' . $user . '----');
-        $wechat_user = $user->wechat_user;
-        $openid = $wechat_user->id;
+        Log::info('----' . json_encode($user) . '----');
+        // $wechat_user = $user->wechat_user;
+        
+        $openid = $user->id;
+        $name = $user->name;
+        // $user = $user->original;
+        // Log::info('*****' . $user['original'] . '*****');
+        $wechat_user = $user->original;
+        // Log::info('*****' . implode(",", $wechat_user) . '*****');
 
         // 保存用户信息
         $api_token = uniqid();
         $created_at = time();
         try {
             DB::table('users')->insert([
-                'nickname' => $wechat_user->nickname,
-                'realname' => $wechat_user->name,
-                'openid' => $wechat_user->openid,
-                'sex' => $wechat_user->sex,
-                'city' => $wechat_user->city,
-                'province' => $wechat_user->province,
-                'country' => $wechat_user->country,
-                'headimgurl' => $wechat_user->headimgurl,
+                'nickname' => $wechat_user['nickname'],
+                'realname' => $name,
+                'openid' => $openid,
+                'sex' => $wechat_user['sex'],
+                'city' => $wechat_user['city'],
+                'province' => $wechat_user['province'],
+                'country' => $wechat_user['country'],
+                'headimgurl' => $wechat_user['headimgurl'],
                 'api_token' => $api_token,
                 'created_at' => $created_at,
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             DB::table('users')->where('openid', $openid)->update([
-                'nickname' => $wechat_user->nickname,
-                'realname' => $wechat_user->name,
-                'sex' => $wechat_user->sex,
-                'city' => $wechat_user->city,
-                'province' => $wechat_user->province,
-                'country' => $wechat_user->country,
-                'headimgurl' => $wechat_user->headimgurl,
+                'nickname' => $wechat_user['nickname'],
+                'realname' => $name,
+                'sex' => $wechat_user['sex'],
+                'city' => $wechat_user['city'],
+                'province' => $wechat_user['province'],
+                'country' => $wechat_user['country'],
+                'headimgurl' => $wechat_user['headimgurl'],
                 'api_token' => $api_token,
                 'created_at' => $created_at,
             ]);
@@ -114,7 +119,10 @@ class WeChatController extends Controller
         // $_SESSION['wechat_user'] = $user->toArray();
         // $targetUrl = empty($_SESSION['target_url']) ? '/' : $_SESSION['target_url'];
 
-        header('Location:' . 'http://www.dist.suibian.ink?token=' . $api_token);
+        // header('Location:' . 'http://www.dist.suibian.ink?token=' . $api_token);
+        // http://www.dist.suibian.ink/#/?token=' . $api_token
+        Log:info('************************************' .  'http://www.dist.suibian.ink/#/?token=' . $api_token);
+        header('Location:' . 'http://www.dist.suibian.ink/#/?token=' . $api_token);
 
     }
 
