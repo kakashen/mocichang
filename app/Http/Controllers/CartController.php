@@ -54,6 +54,7 @@ class CartController extends Controller
             return response()->json(['code' => 200, 'message' => '加入成功']);
 
         } catch (\Exception $e) {
+            Log:info($e->getMessage());
             return response()->json(['code' => 500, 'message' => '加入失败']);
         }
     }
@@ -73,6 +74,7 @@ class CartController extends Controller
             return response()->json(['code' => 200, 'message' => '删除成功']);
 
         } catch (\Exception $e) {
+            Log:info($e->getMessage());
             return response()->json(['code' => 500, 'message' => '删除失败']);
         }
     }
