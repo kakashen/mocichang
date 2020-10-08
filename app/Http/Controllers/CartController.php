@@ -31,7 +31,7 @@ class CartController extends Controller
     {
         $product_id = $request->input('product_id'); // 商品id
         $amount = $request->get('amount', 1); // 分类描述
-        $user_id = Auth::user(); // 用户id
+        $user_id = Auth::user()->id; // 用户id
         $created_at = time();
         try {
 
