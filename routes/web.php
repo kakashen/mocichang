@@ -62,6 +62,11 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('delete', 'AddressController@delete');
     });
 
+    // 微信下单
+    $router->group(['prefix' => 'pay'], function () use ($router) {
+        $router->post('unify', 'PayController@unify');
+
+    });
 
 });
 
