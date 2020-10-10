@@ -62,7 +62,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('delete', 'AddressController@delete');
     });
 
-    $router->group(['prefix' => 'admin'], function () use ($router) {
+    $router->group(['prefix' => 'admin', 'middleware' => 'admin_auth'], function () use ($router) {
         $router->group(['prefix' => 'order'], function () use ($router) {
             $router->post('show', 'OrderController@show');
         });
