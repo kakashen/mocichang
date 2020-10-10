@@ -29,9 +29,9 @@ class AdminAuthServiceProvider extends ServiceProvider
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
 
-        $this->app['admin_auth']->viaRequest('api', function ($request) {
+        $this->app['auth']->viaRequest('api', function ($request) {
             if ($request->input('token')) {
-                return Admin::where('api_token', $request->input('token'))->first();
+                return Admin::where('token', $request->input('token'))->first();
             }
         });
     }
