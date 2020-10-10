@@ -23,7 +23,7 @@ class WeChatController extends Controller
 
         $app = app('wechat.official_account');
         $app->server->push(function ($message) {
-            return "你好坏呀！";
+            return "欢迎来到膜磁场^.^";
         });
 
         return $app->server->serve();
@@ -77,7 +77,7 @@ class WeChatController extends Controller
         // $user = $oauth->userFromCode($request['code']);
         Log::info('----' . json_encode($user) . '----');
         // $wechat_user = $user->wechat_user;
-        
+
         $openid = $user->id;
         $name = $user->name;
         // $user = $user->original;

@@ -100,6 +100,10 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
 
         });
 
+        $router->group(['prefix' => 'admin'], function () use ($router) {
+            $router->post('login', 'AdminController@login');
+        });
+
     });
 
 });
