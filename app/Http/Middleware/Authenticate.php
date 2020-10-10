@@ -37,9 +37,9 @@ class Authenticate
     {
         Log:info($request);
         if ($this->auth->guard($guard)->guest()) {
-            //  return response()->json(['data' => [
-            //      'oauth_url' => 'http://www.api.suibian.ink/wechat/oauth'
-            //  ], 'code' => 401, 'message' => 'Unauthorized.']);
+             return response()->json(['data' => [
+                 'oauth_url' => 'http://www.api.suibian.ink/wechat/oauth'
+             ], 'code' => 401, 'message' => 'Unauthorized.']);
         }
 
         return $next($request);
