@@ -39,7 +39,7 @@ class OrderController extends Controller
         $address = $request->get('address');
 
 
-        $user_id = Auth::user(); // 用户id
+        $user_id = Auth::user()->id; // 用户id
         $created_at = time();
         $no = uniqid();
 
@@ -110,7 +110,9 @@ class OrderController extends Controller
         $this->order->where('id', $ret->id)->update(['total_price' => $total_amount]);
         // 删除购物车
         DB::table('carts')->where('user_id', $user_id)->delete();
-        return response()->json(['code' => 200, 'message' => '下单成功']);
+        return response()->json([
+            'data' => ['order_id' => $ret->id, 'total_fee' => $total_price],
+            'code' => 200, 'message' => '下单成功']);
     }
 
     public function delete(Request $request)

@@ -6,6 +6,7 @@ use App\Model\Pay;
 use Illuminate\Http\Request;
 use EasyWeChat\Factory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PayController extends Controller
@@ -25,7 +26,12 @@ class PayController extends Controller
 
     public function unify(Request $request)
     {
+        $order_id = $request->get('order_id'); // 订单id
         $total_fee = $request->get('total_fee', 88); // 总金额
+        DB::table('pays')->insert([
+            ''
+        ]);
+
         $config = [
             // ...
             'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID', 'your-app-id'),         // AppID
