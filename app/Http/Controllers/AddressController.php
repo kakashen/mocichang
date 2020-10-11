@@ -38,7 +38,7 @@ class AddressController extends Controller
         $contact_phone = $request->get('contact_phone');
 
 
-        $user_id = Auth::user();
+        $user_id = Auth::user()->id;
 
         $created_at = time();
         try {
