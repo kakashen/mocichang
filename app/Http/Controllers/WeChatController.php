@@ -7,7 +7,8 @@ use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
-use Log;
+use Illuminate\Support\Facades\Log;
+
 
 class WeChatController extends Controller
 {
@@ -158,6 +159,48 @@ class WeChatController extends Controller
         // $user = $_SESSION['wechat_user'];
         // header('Location:'. $_SESSION['target_url']);
 
+    }
+
+    public function payCallback()
+    {
+        $app = app('wechat.official_account');
+
+        return $app->handlePaidNotify(function ($message, $fail) {
+            Log::info("微信支付回调返回信息 ========> " . json_encode($message));
+            $order = $this->checkOrder($message['out_trade_no']);
+            if (!$order) {
+                Log::info("订单不存在"); // 如果订单不存在
+                return true;
+            }
+            if ($order->status == 1) { //订单已经支付过了
+                Log::info("已经支付完成");
+                return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+            }
+
+            if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
+                // 用户是否支付成功
+                if ($message['result_code'] === 'SUCCESS') {
+                    $order->paid_at = time(); // 更新支付时间为当前时间
+                    $order->status = 1;
+
+                    // 用户支付失败
+                } elseif ($message['result_code'] === 'FAIL') {
+                    $order->status = 2;
+                }
+
+                return true;
+            } else {
+                return $fail('通信失败，请稍后再通知我');
+            }
+            // 或者错误消息
+            // $fail('Order not exists.');
+        });
+        // $response->send(); // Laravel 里请使用：return $response;
+    }
+
+    public function checkOrder($out_trade_no)
+    {
+        return DB::table('pays')->where('out_trade_no', $out_trade_no)->first();
     }
 
 

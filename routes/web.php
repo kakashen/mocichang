@@ -22,6 +22,7 @@ $router->get('/', function () use ($router) {
 // $router->get('/wechat', 'WeChatController@serve');
 $router->addRoute(['GET', 'POST'], '/wechat', 'WeChatController@serve');
 $router->addRoute(['GET', 'POST'], '/callback', 'WeChatController@callback');
+$router->addRoute(['GET', 'POST'], '/pay_callback', 'WeChatController@payCallback');
 
 $router->group(['prefix' => 'wechat'], function () use ($router) {
     $router->post('create', 'WeChatController@create');
@@ -65,6 +66,8 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     // 微信下单
     $router->group(['prefix' => 'pay'], function () use ($router) {
         $router->post('unify', 'PayController@unify');
+        $router->post('order_query', 'PayController@orderQuery');
+
 
     });
 

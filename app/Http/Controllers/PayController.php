@@ -54,27 +54,28 @@ class PayController extends Controller
 
 
         try {
+            $out_trade_no = date('Ymd') . $insert_id;
             $app = Factory::payment($config);
             $result = $app->order->unify([
                 'body' => '膜磁场订单支付中心',
-                'out_trade_no' => microtime(true) * 10000,
+                'out_trade_no' => $out_trade_no,
                 'total_fee' => $total_fee,
                 // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
                 // 'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
                 'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
                 'openid' => Auth::user()->openid,
             ]);
-            
-            
+
+
             Log::info("统一下单接口数据返回 ====== " . json_encode($result));
-            
+
             $result = json_decode(json_encode($result));
-            
+
             if ($result->return_code == 'FAIL') {
                 return response()->json(['code' => 500, 'message' => '微信下单失败']);
             }
 
-            
+
             DB::table('pays')->where('id', $insert_id)->update([
                 'appid' => $result->appid,
                 'mch_id' => $result->mch_id,
@@ -82,6 +83,7 @@ class PayController extends Controller
                 'sign' => $result->sign,
                 'prepay_id' => $result->prepay_id,
                 'trade_type' => $result->trade_type,
+                'out_trade_no' => $out_trade_no
             ]);
             return response()->json(['data' => $result, 'code' => 200, 'message' => '微信下单成功']);
         } catch (\Exception $e) {
@@ -89,6 +91,37 @@ class PayController extends Controller
             return response()->json(['code' => 500, 'message' => '微信下单失败']);
         }
 
+    }
+
+    public function orderQuery(Request $request)
+    {
+        $order_id = $request->get('order_id');
+        $pay_order = DB::table('pays')->where('order_id', $order_id)->first();
+        if (!$pay_order) {
+            return response()->json(['code' => 500, 'message' => '微信订单未找到']);
+        }
+
+        if ($pay_order->status == 1) {
+            return response()->json(['code' => 200, 'message' => '支付成功']);
+        }
+
+        if ($pay_order->status == 2) {
+            return response()->json(['code' => 500, 'message' => '支付失败']);
+        }
+
+        ///////////// <- 建议在这里调用微信的【订单查询】接口查一下该笔订单的情况，确认是已经支付 /////////////
+        $app = app('wechat.official_account');
+        $result = $app->order->queryByOutTradeNumber($pay_order->out_trade_no);
+
+        if ($result['result_code'] === 'SUCCESS') {
+            $pay_order->paid_at = time(); // 更新支付时间为当前时间
+            $pay_order->status = 1;
+            return response()->json(['code' => 200, 'message' => '支付成功']);
+        }
+
+        // 用户支付失败
+        $pay_order->status = 2;
+        return response()->json(['code' => 500, 'message' => '支付失败']);
     }
 
 }
