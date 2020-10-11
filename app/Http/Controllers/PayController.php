@@ -28,12 +28,25 @@ class PayController extends Controller
     {
         $order_id = $request->get('order_id'); // 订单id
         $total_fee = $request->get('total_fee', 88); // 总金额
-        $insert_id = DB::table('pays')->insertGetId([
-            'order_id' => $order_id,
-            'total_fee' => $total_fee,
-            'openid' => Auth::user()->openid,
-            'created_at' => time()
-        ]);
+
+        $query_pay = DB::table('pays')->where('order_id', $order_id)->first();
+        if ($query_pay) {
+            $insert_id = $query_pay->id;
+            if ($query_pay->total_fee != $total_fee) {
+                return response()->json(['code' => 500, 'message' => '支付金额有误, 请稍后再试~']);
+            }
+            if ($query_pay->openid != Auth::user()->openid) {
+                return response()->json(['code' => 500, 'message' => '支付所有者有误, 请稍后再试~']);
+            }
+        } else {
+
+            $insert_id = DB::table('pays')->insertGetId([
+                'order_id' => $order_id,
+                'total_fee' => $total_fee,
+                'openid' => Auth::user()->openid,
+                'created_at' => time()
+            ]);
+        }
 
         $config = [
             // ...
