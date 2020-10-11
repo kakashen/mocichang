@@ -49,7 +49,7 @@ class PayController extends Controller
             // 'cert_path' => env('', 'PATH/TO/YOUR/CERT.PEM'), // XXX: 绝对路径！！！！
             // 'key_path' => env('', 'PATH/TO/YOUR/KEY'),      // XXX: 绝对路径！！！！
 
-            'notify_url' => env('', '默认的订单回调地址'),     // 你也可以在下单时单独设置来想覆盖它
+            'notify_url' => env('PAY_CALLBACK_URL', '默认的订单回调地址'),     // 你也可以在下单时单独设置来想覆盖它
         ];
 
 
@@ -110,7 +110,16 @@ class PayController extends Controller
         }
 
         ///////////// <- 建议在这里调用微信的【订单查询】接口查一下该笔订单的情况，确认是已经支付 /////////////
-        $app = app('wechat.official_account');
+        $config = [
+            'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID', 'your-app-id'),         // AppID
+            'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET', 'your-app-secret'),    // AppSecret
+            'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN', 'your-token'),           // Token
+            'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY', ''),
+            'mch_id' => env('YOUR_MCH_ID', 'YOUR-MCH-ID'),
+            'key' => env('KEY_FOR_SIGNATURE', 'KEY-FOR-SIGNATURE'),   // API 密钥
+        ];
+        $app = Factory::payment($config);
+
         $result = $app->order->queryByOutTradeNumber($pay_order->out_trade_no);
 
         if ($result['result_code'] === 'SUCCESS') {
