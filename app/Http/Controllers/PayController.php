@@ -130,6 +130,7 @@ class PayController extends Controller
         }
 
         if ($pay_order->status == 1) {
+            $this->updateOrder($pay_order->id);
             return response()->json(['code' => 200, 'message' => '支付成功']);
         }
 
@@ -154,12 +155,28 @@ class PayController extends Controller
             && $result['trade_state'] == 'SUCCESS') {
             $pay_order->paid_at = time(); // 更新支付时间为当前时间
             $pay_order->status = 1;
+            $this->updateOrder($pay_order->id);
             return response()->json(['code' => 200, 'message' => '支付成功']);
         }
 
         // 用户支付失败
         $pay_order->status = 2;
         return response()->json(['code' => 500, 'message' => '支付失败 ===>' . $result['trade_state']]);
+    }
+
+
+    /**
+     * @param $order_id
+     * @return int
+     * 更新订单表状态
+     */
+    public function updateOrder($order_id)
+    {
+        return DB::table('orders')->where('id', $order_id)->update([
+            'pay_status' => 'pending',
+            'pay_at' => time()
+        ]);
+
     }
 
 }

@@ -174,6 +174,7 @@ class WeChatController extends Controller
             }
             if ($order->status == 1) { //订单已经支付过了
                 Log::info("已经支付完成");
+                $this->updateOrder($order->id);
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }
 
@@ -182,6 +183,7 @@ class WeChatController extends Controller
                 if ($message['result_code'] === 'SUCCESS') {
                     $order->paid_at = time(); // 更新支付时间为当前时间
                     $order->status = 1;
+                    $this->updateOrder($order->id);
 
                     // 用户支付失败
                 } elseif ($message['result_code'] === 'FAIL') {
@@ -201,6 +203,20 @@ class WeChatController extends Controller
     public function checkOrder($out_trade_no)
     {
         return DB::table('pays')->where('out_trade_no', $out_trade_no)->first();
+    }
+
+    /**
+     * @param $order_id
+     * @return int
+     * 更新订单表状态
+     */
+    public function updateOrder($order_id)
+    {
+        return DB::table('orders')->where('id', $order_id)->update([
+            'pay_status' => 'pending',
+            'pay_at' => time()
+        ]);
+
     }
 
 
