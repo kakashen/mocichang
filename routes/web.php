@@ -71,6 +71,12 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
 
     });
 
+    $router->group(['prefix' => 'user'], function () use ($router) {
+        $router->post('info', 'UserController@info');
+
+
+    });
+
 });
 
 $router->group(['prefix' => 'admin', 'middleware' => 'admin_auth'], function () use ($router) {

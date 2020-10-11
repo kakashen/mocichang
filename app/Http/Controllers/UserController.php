@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -36,6 +37,11 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => '获取失败']);
         }
+    }
+
+    public function info()
+    {
+        return Auth::user();
     }
 
 }
