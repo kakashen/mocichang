@@ -29,7 +29,9 @@ class PayController extends Controller
         $order_id = $request->get('order_id'); // 订单id
         $total_fee = $request->get('total_fee', 88); // 总金额
         DB::table('pays')->insert([
-            ''
+            'order_id' => $order_id,
+            'total_fee' => $total_fee,
+            'created_at' => time()
         ]);
 
         $config = [
