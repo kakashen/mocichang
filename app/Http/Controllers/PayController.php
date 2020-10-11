@@ -31,6 +31,7 @@ class PayController extends Controller
         DB::table('pays')->insert([
             'order_id' => $order_id,
             'total_fee' => $total_fee,
+            'openid' => Auth::user()->openid,
             'created_at' => time()
         ]);
 
