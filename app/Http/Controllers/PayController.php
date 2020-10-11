@@ -38,6 +38,21 @@ class PayController extends Controller
             if ($query_pay->openid != Auth::user()->openid) {
                 return response()->json(['code' => 500, 'message' => '支付所有者有误, 请稍后再试~']);
             }
+
+            $data = [
+                "return_code" => "SUCCESS",
+                "return_msg" => "OK",
+                "appid" => $query_pay->appid,
+                "mch_id" => $query_pay->mch_id,
+                "nonce_str" => $query_pay->nonce_str,
+                "sign" => $query_pay->sign,
+                "result_code" => 'SUCCESS',
+                "prepay_id" => $query_pay->prepay_id,
+                "trade_type" => 'JSAPI',
+            ];
+
+            return response()->json(['data' => $data, 'code' => 200, 'message' => '微信下单成功']);
+
         } else {
 
             $insert_id = DB::table('pays')->insertGetId([
@@ -84,7 +99,7 @@ class PayController extends Controller
 
             $result = json_decode(json_encode($result));
 
-            if ($result->return_code == 'FAIL') {
+            if ($result->return_code == 'FAIL' || $result->result_code == 'FAIL') {
                 return response()->json(['code' => 500, 'message' => '微信下单失败']);
             }
 
