@@ -28,7 +28,7 @@ class PayController extends Controller
     {
         $order_id = $request->get('order_id'); // 订单id
         $total_fee = $request->get('total_fee', 88); // 总金额
-        DB::table('pays')->insert([
+        $insert_id = DB::table('pays')->insertGetId([
             'order_id' => $order_id,
             'total_fee' => $total_fee,
             'openid' => Auth::user()->openid,
@@ -64,7 +64,25 @@ class PayController extends Controller
                 'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
                 'openid' => Auth::user()->openid,
             ]);
+            
+            
             Log::info("统一下单接口数据返回 ====== " . json_encode($result));
+            
+            $result = json_decode(json_encode($result));
+            
+            if ($result->return_code == 'FAIL') {
+                return response()->json(['code' => 500, 'message' => '微信下单失败']);
+            }
+
+            
+            DB::table('pays')->where('id', $insert_id)->update([
+                'appid' => $result->appid,
+                'mch_id' => $result->mch_id,
+                'nonce_str' => $result->nonce_str,
+                'sign' => $result->sign,
+                'prepay_id' => $result->prepay_id,
+                'trade_type' => $result->trade_type,
+            ]);
             return response()->json(['data' => $result, 'code' => 200, 'message' => '微信下单成功']);
         } catch (\Exception $e) {
             Log::error("统一下单接口错误 ------ " . $e->getMessage());
