@@ -121,8 +121,9 @@ class PayController extends Controller
         $app = Factory::payment($config);
 
         $result = $app->order->queryByOutTradeNumber($pay_order->out_trade_no);
-
-        if ($result['result_code'] === 'SUCCESS') {
+        Log::info(json_encode($result));
+        if ($result['return_code'] === 'SUCCESS' && $result['result_code'] === 'SUCCESS'
+            && $result['trade_state'] == 'SUCCESS') {
             $pay_order->paid_at = time(); // 更新支付时间为当前时间
             $pay_order->status = 1;
             return response()->json(['code' => 200, 'message' => '支付成功']);
@@ -130,7 +131,7 @@ class PayController extends Controller
 
         // 用户支付失败
         $pay_order->status = 2;
-        return response()->json(['code' => 500, 'message' => '支付失败']);
+        return response()->json(['code' => 500, 'message' => '支付失败 ===>' . $result['trade_state']]);
     }
 
 }
