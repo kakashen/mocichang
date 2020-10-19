@@ -29,6 +29,7 @@ class OrderController extends Controller
     {
         $pay_status = $request->get('pay_status'); // 0未支付 1已支付
         $data = $this->order->where('pay_status', $pay_status)
+            ->where('user_id', Auth::user()->id)
             ->orderBy('created_at')->with('product')->get();
         return response()->json(['data' => $data, 'code' => 200, 'message' => 'ok']);
     }
