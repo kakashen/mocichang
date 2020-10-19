@@ -113,7 +113,12 @@ class PayController extends Controller
                 'trade_type' => $result->trade_type,
                 'out_trade_no' => $out_trade_no
             ]);
-            return response()->json(['data' => $result, 'code' => 200, 'message' => '微信下单成功']);
+            $jssdk = $app->jssdk;
+            $prepayId = $result->prepay_id;
+            Log::info('JSAPI' . $json = $jssdk->bridgeConfig($prepayId));
+            
+            $json = $jssdk->bridgeConfig($prepayId);
+            return response()->json(['data' => $json, 'code' => 200, 'message' => '微信下单成功']);
         } catch (\Exception $e) {
             Log::error("统一下单接口错误 ------ " . $e->getMessage());
             return response()->json(['code' => 500, 'message' => '微信下单失败']);

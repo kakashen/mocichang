@@ -163,7 +163,17 @@ class WeChatController extends Controller
 
     public function payCallback()
     {
-        $app = app('wechat.official_account');
+        // $app = app('wechat.official_account');
+        
+        $config = [
+            'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID', 'your-app-id'),         // AppID
+            'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET', 'your-app-secret'),    // AppSecret
+            'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN', 'your-token'),           // Token
+            'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY', ''),
+            'mch_id' => env('YOUR_MCH_ID', 'YOUR-MCH-ID'),
+            'key' => env('KEY_FOR_SIGNATURE', 'KEY-FOR-SIGNATURE'),   // API 密钥
+        ];
+        $app = Factory::payment($config);
 
         return $app->handlePaidNotify(function ($message, $fail) {
             Log::info("微信支付回调返回信息 ========> " . json_encode($message));
@@ -180,14 +190,24 @@ class WeChatController extends Controller
 
             if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
                 // 用户是否支付成功
+                Log::info('微信回调通信成功');
                 if ($message['result_code'] === 'SUCCESS') {
-                    $order->paid_at = time(); // 更新支付时间为当前时间
-                    $order->status = 1;
-                    $this->updateOrder($order->id);
-
+                    DB::table('pays')->where('id', $order->id)->update([
+                       'paid_at' => time(),
+                       'status' => 1,
+                    ]);
+                    // $order->paid_at = time(); // 更新支付时间为当前时间
+                    // $order->status = 1;
+                    $this->updateOrder($order->order_id);
+                    Log::info('更新支付成功');
                     // 用户支付失败
                 } elseif ($message['result_code'] === 'FAIL') {
-                    $order->status = 2;
+                    DB::table('pays')->where('id', $order->id)->update([
+                       'paid_at' => time(),
+                       'status' => 2,
+                    ]);
+                    Log::error("更新支付失败");
+                    // $order->status = 2;
                 }
 
                 return true;
