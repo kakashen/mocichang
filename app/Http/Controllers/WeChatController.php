@@ -4,6 +4,8 @@
 namespace App\Http\Controllers;
 
 use EasyWeChat\Factory;
+use EasyWeChat\Kernel\Messages\Image;
+
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
@@ -26,7 +28,9 @@ class WeChatController extends Controller
         $app->server->push(function ($message) {
             if ($message['MsgType'] == 'event') {
                 if ($message['EventKey'] == 'V1001_COMPANY_INTRO') {
-                   return "山东莺锦生物科技有限公司成立于2020年1月，是一家集生物技术开发、新材料技术开发、化妆品技术开发、食品饮品销售和进出口经营等业务的综合性公司。公司旗下品牌“卡诺滋”“膜磁场”“莺锦”“博美赫”营销网络已遍布全国，其拥有掌握高精尖技术的专业科研团队及具有二十多年美业丰富经验的专业销售团队，并建立了一套科学规范的管理机制，致力于打造最适合华人女性的创业平台。"; 
+                    return new Image('Uv0IQ2jfUJfA8lVaVrGncpnV_AnpsL9jOScjrwvLTxQ');
+
+                    // return "山东莺锦生物科技有限公司成立于2020年1月，是一家集生物技术开发、新材料技术开发、化妆品技术开发、食品饮品销售和进出口经营等业务的综合性公司。公司旗下品牌“卡诺滋”“膜磁场”“莺锦”“博美赫”营销网络已遍布全国，其拥有掌握高精尖技术的专业科研团队及具有二十多年美业丰富经验的专业销售团队，并建立了一套科学规范的管理机制，致力于打造最适合华人女性的创业平台。"; 
                 }
                 
                 if ($message['EventKey'] == 'V1001_CONTACT_US') {
@@ -257,6 +261,4 @@ class WeChatController extends Controller
         ]);
 
     }
-
-
 }
